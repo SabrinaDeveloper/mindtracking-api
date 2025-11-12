@@ -5,7 +5,6 @@ import { gerarPDF } from '../utils/pdfGenerator.js';
 export async function gerarRelatorio(req, res) {
   try {
     const { id } = req.params;
-    console.log("📋 ID recebido:", id);
 
     const dados = await relatorioUsuario(id);
     
@@ -15,12 +14,7 @@ export async function gerarRelatorio(req, res) {
 
     const { dadosUsuario, relatorio } = dados;
     
-    // Logs para debug
-    console.log("👤 DadosUsuario:", dadosUsuario);
-    console.log("📝 Quantidade de diários:", relatorio.diarios?.length);
-    console.log("📝 Quantidade de questionários:", relatorio.questionarios?.length);
-    console.log("📝 Questionário inicial:", relatorio.questionario_inicial);
-    console.log("📝 Quantidade de diagnósticos:", relatorio.diagnosticos?.length);
+    
 
     // Gerar PDF
     const caminhoPDF = gerarPDF(dadosUsuario, relatorio);
