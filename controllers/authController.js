@@ -292,7 +292,9 @@ export async function login(req, res) {
                 nome: user.nome,
                 email: user.email,
                 questionario_inicial: user.questionario_inicial,
-                email_verificado: user.email_verificado
+                email_verificado: user.email_verificado,
+                foto_perfil_url: user.foto_perfil_url ?? null,
+                foto_fundo_url: user.foto_fundo_url ?? null
             },
             token,
         });
