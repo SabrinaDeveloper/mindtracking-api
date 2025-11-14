@@ -139,33 +139,34 @@ export function gerarPDF(dadosUsuario, relatorio) {
 }
 
 function formatarData(data) {
-  if (!data) return 'Data não informada';
+  if (!data) return '-';
 
   try {
-    // Trata strings ISO (com ou sem fuso)
-    let date;
-    if (typeof data === 'string') {
-      // Remove frações de segundo e garante formato válido
-      const normalizada = data.split('.')[0];
-      date = new Date(normalizada + (normalizada.endsWith('Z') ? '' : 'Z')); 
-      // Adiciona "Z" se não houver timezone → assume UTC
-    } else {
-      date = new Date(data);
+    // Se vier como objeto Date
+    if (data instanceof Date) {
+      const dia = String(data.getDate()).padStart(2, '0');
+      const mes = String(data.getMonth() + 1).padStart(2, '0');
+      const ano = data.getFullYear();
+      return `${dia}/${mes}/${ano}`;
     }
 
-    // Se a data ainda for inválida, retorna o valor original
-    if (isNaN(date)) return String(data);
+    // Se vier como string no formato ISO (ex: "2025-11-12T00:00:00")
+    if (typeof data === 'string') {
+      const match = data.match(/^(\d{4})-(\d{2})-(\d{2})/);
+      if (match) {
+        const [, ano, mes, dia] = match;
+        return `${dia}/${mes}/${ano}`;
+      }
+    }
 
-    // Formata no padrão brasileiro
-    return date.toLocaleDateString('pt-BR', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric'
-    });
-  } catch {
+    // Caso nada funcione, devolve como texto mesmo
+    return String(data);
+  } catch (err) {
+    console.error('Erro ao formatar data:', err);
     return String(data);
   }
 }
+
 
 
 function calcularMediaQuestionario(questionario) {

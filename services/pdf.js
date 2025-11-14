@@ -109,13 +109,32 @@ function processarDiagnosticos(diagnosticos) {
   });
 }
 
-// 🗓️ Formatar data
 function formatarData(data) {
   if (!data) return '-';
+
   try {
-    const d = new Date(data);
-    return d.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
-  } catch {
+    // Se vier como objeto Date
+    if (data instanceof Date) {
+      const dia = String(data.getDate()).padStart(2, '0');
+      const mes = String(data.getMonth() + 1).padStart(2, '0');
+      const ano = data.getFullYear();
+      return `${dia}/${mes}/${ano}`;
+    }
+
+    // Se vier como string no formato ISO (ex: "2025-11-12T00:00:00")
+    if (typeof data === 'string') {
+      const match = data.match(/^(\d{4})-(\d{2})-(\d{2})/);
+      if (match) {
+        const [, ano, mes, dia] = match;
+        return `${dia}/${mes}/${ano}`;
+      }
+    }
+
+    // Caso nada funcione, devolve como texto mesmo
+    return String(data);
+  } catch (err) {
+    console.error('Erro ao formatar data:', err);
     return String(data);
   }
 }
+
